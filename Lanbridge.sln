@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{CEA3AB3C-7BC1-4EB7-AB4C-6A0CBFD88515}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonProxy", "JsonProxy\JsonProxy.csproj", "{4EF6869D-C42C-4F5B-B2A2-E0974F09C96A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lanbridge", "Lanbridge\Lanbridge.csproj", "{C48CB7B8-F0FC-4896-A92E-1F210F15B251}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEA3AB3C-7BC1-4EB7-AB4C-6A0CBFD88515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA3AB3C-7BC1-4EB7-AB4C-6A0CBFD88515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA3AB3C-7BC1-4EB7-AB4C-6A0CBFD88515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA3AB3C-7BC1-4EB7-AB4C-6A0CBFD88515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF6869D-C42C-4F5B-B2A2-E0974F09C96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF6869D-C42C-4F5B-B2A2-E0974F09C96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF6869D-C42C-4F5B-B2A2-E0974F09C96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF6869D-C42C-4F5B-B2A2-E0974F09C96A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C48CB7B8-F0FC-4896-A92E-1F210F15B251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C48CB7B8-F0FC-4896-A92E-1F210F15B251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C48CB7B8-F0FC-4896-A92E-1F210F15B251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C48CB7B8-F0FC-4896-A92E-1F210F15B251}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
