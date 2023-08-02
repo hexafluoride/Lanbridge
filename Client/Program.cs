@@ -46,7 +46,7 @@ public class Program
             new BannedTokensLogitTransform(new[] {1, 2}),
             new TopTokensLogitTransform(0.95, 50),
             new TemperatureLogitTransform(0.32),
-            new RepetitionPenaltyLogitTransform(1.02)
+            new RepetitionPenaltyLogitTransform(1.2)
         };
         
         for (int i = 25; i <= 250; i += 25)
@@ -231,8 +231,7 @@ public class Program
                 ticks = stopwatch.ElapsedTicks
             });
 
-            instance.SubmitRequest(new NetworkedGptInstance.RequestBundle(ping, requestId));
-            var responseMessage = instance.PollForResponse(requestId, true);
+            var responseMessage = instance.SubmitAndWait(new NetworkedGptInstance.RequestBundle(ping, requestId));
             var response = responseMessage?.Body ?? throw new Exception();
 
             var ticksReturned = response.GetProperty("result").GetInt64();

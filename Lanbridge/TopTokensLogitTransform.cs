@@ -15,9 +15,9 @@ public class TopTokensLogitTransform : ILogitTransform
     
     public void Process(Memory<double> data, Memory<double> output, GenerationContext context)
     {
-        var indices = MemoryPool<int>.Shared.Rent(data.Length);
-        var buffer = MemoryPool<double>.Shared.Rent(data.Length);
-        var buffer2 = MemoryPool<double>.Shared.Rent(data.Length);
+        using var indices = MemoryPool<int>.Shared.Rent(data.Length);
+        using var buffer = MemoryPool<double>.Shared.Rent(data.Length);
+        using var buffer2 = MemoryPool<double>.Shared.Rent(data.Length);
         var indicesMemory = indices.Memory[..data.Length];
         var bufferMemory = buffer.Memory[..data.Length];
         var buffer2Memory = buffer2.Memory[..data.Length];
@@ -38,19 +38,17 @@ public class TopTokensLogitTransform : ILogitTransform
         
         bufferSpan.Sort(indicesSpan);
         indicesSpan.Reverse();
+        dataSpan.CopyTo(bufferSpan);
 
         if (TopK != 0)
         {
             for (int i = TopK; i < data.Length; i++)
             {
-                bufferSpan[i] = Double.NegativeInfinity;
+                bufferSpan[indicesSpan[i]] = Double.NegativeInfinity;
             }
         }
 
         TokenUtilities.Softmax(bufferMemory, buffer2Memory);
-
-        // bufferSpan.Sort(indicesSpan);
-        // indicesSpan.Reverse();
 
         double sum = 0d;
         for (int i = 0; i < data.Length; i++)
@@ -65,9 +63,5 @@ public class TopTokensLogitTransform : ILogitTransform
                 break;
             }
         }
-        
-        indices.Dispose();
-        buffer.Dispose();
-        buffer2.Dispose();
     }
 }
