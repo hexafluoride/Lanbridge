@@ -14,7 +14,9 @@ public class TemperatureLogitTransform : ILogitTransform
         var outputSpan = output.Span;
         for (int i = 0; i < data.Length; i++)
         {
-            outputSpan[i] = dataSpan[i] / Temperature;
+            outputSpan[i] = (dataSpan[i] / Temperature) + 1e8;
         }
+        
+        TokenUtilities.Softmax(output, output);
     }
 }

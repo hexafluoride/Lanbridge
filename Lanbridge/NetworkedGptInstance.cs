@@ -168,6 +168,19 @@ public class NetworkedGptInstance
         return new RequestBundle(requestEncoded, id);
     }
 
+    public RequestBundle RequestBufferOperation(int stateId, string operation)
+    {
+        var id = Random.Shared.Next();
+        var request = JsonSerializer.SerializeToElement(new
+        {
+            type = "sleep",
+            id,
+            stateId,
+            operation
+        });
+        return new RequestBundle(request, id);
+    }
+
     public Message? PollForResponse(int requestId, bool wait)
     {
         var pollRequest = new Message()

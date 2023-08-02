@@ -22,8 +22,8 @@ public class LightGenerationRequest
     [JsonPropertyName("trim_past")]
     public int TrimPast { get; set; }
     
-    [JsonPropertyName("decode_method")]
-    public string DecodeMethod { get; set; } = "additive";
+    [JsonPropertyName("decode_only")]
+    public bool DecodeOnly { get; set; }
     
     [JsonPropertyName("keep_warm")]
     public bool KeepWarm { get; set; }

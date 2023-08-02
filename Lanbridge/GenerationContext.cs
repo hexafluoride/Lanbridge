@@ -12,7 +12,7 @@ public class GenerationContext
     public List<ILogitTransform> LogitTransforms { get; set; } = new();
 
     public string TokenToText(int tokenId) => GptInstance.Tokens[tokenId];
-    public string Decode(IEnumerable<int> tokens) => string.Join("", tokens.Select(TokenToText));
+    public string Detokenize(IEnumerable<int> tokens) => string.Join("", tokens.Select(TokenToText));
     public double CumulativeGpuTime;
     
     public GenerationContext(NetworkedGptInstance gptInstance)
@@ -27,10 +27,45 @@ public class GenerationContext
         var decodeResponse = GptInstance.SubmitAndWait(request).Body ?? throw new Exception("Could not read response");
         var startTokensText = decodeResponse.GetProperty("result").GetProperty("response_decoded").GetString() ?? throw new Exception("Could not decode response");
         var tokens = startTokensText.Trim('[',']').Split(',').Select(n => int.Parse(n)).ToList();
-        tokens.Insert(0, 1);
+        // tokens.Insert(0, 1);
         return tokens;
     }
 
+    public void AddTokens(IEnumerable<int> tokens)
+    {
+        InputTokens.AddRange(tokens);
+    }
+    
+    public void DecodeTokens()
+    {
+        var request = new LightGenerationRequest()
+        {
+            Tokens = InputTokens,
+            SavePast = UniqueId,
+            UsePast = UniqueId,
+            KeepWarm = true,
+            DecodeOnly = true
+        };
+
+        var requestBundle = GptInstance.RequestGeneration(request);
+        var resultMessage = GptInstance.SubmitAndWait(requestBundle);
+        
+        // we don't really care if this decode fails, as it can be interrupted
+        
+    }
+
+    public void FreezeBuffer()
+    {
+        var requestBundle = GptInstance.RequestBufferOperation(UniqueId, "freeze");
+        GptInstance.SubmitAndWait(requestBundle);
+    }
+
+    public void ThawBuffer()
+    {
+        var requestBundle = GptInstance.RequestBufferOperation(UniqueId, "thaw");
+        GptInstance.SubmitAndWait(requestBundle);
+    }
+    
     public void CalculateLogits(Memory<double> output, int trimPast = -1, bool keepWarm = true)
     {
         var request = new LightGenerationRequest()
@@ -105,12 +140,16 @@ public class GenerationContext
             transform.Process(buffer1Memory, buffer2Memory, this);
             buffer2Memory.CopyTo(buffer1Memory);
         }
-        
-        TokenUtilities.Softmax(buffer1Memory, scoresOut);
     }
 
     public void CommitToken(int token)
     {
         InputTokens.Add(token);
+    }
+
+    public void RollbackTokens(int tokens)
+    {
+        tokens = Math.Min(InputTokens.Count, tokens);
+        InputTokens.RemoveRange(InputTokens.Count - tokens, tokens);
     }
 }
